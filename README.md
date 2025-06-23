@@ -6,7 +6,8 @@ A responsive weather app built with HTML, CSS, and JavaScript using the OpenWeat
 👉 [View it here](https://r-ishabh12.github.io/WeatherApp/)
 
 ## 📸 Screenshots
-<img src="screenshot.png" alt="Weather App Screenshot" width="600"/>
+<img src="imageday.png" alt="Weather App Screenshot" width="600"/>
+<img src="imagenight.png" alt="Weather App Screenshot" width="600"/>
 
 ## 💡 Features
 - Real-time weather updates
