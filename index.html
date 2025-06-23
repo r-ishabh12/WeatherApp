@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Animated Weather App</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to top, #87ceeb, #ffffff);
+      color: #333;
+      text-align: center;
+      transition: background 1s ease;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .container {
+      padding-top: 3rem;
+    }
+
+    input, button {
+      padding: 0.5rem;
+      font-size: 1rem;
+      margin: 0.5rem;
+    }
+
+    .weather-info {
+      margin-top: 2rem;
+      font-size: 1.2rem;
+    }
+
+    .sky {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: -1;
+    }
+
+    .cloud {
+      position: absolute;
+      background: #fff;
+      border-radius: 50%;
+      animation: moveClouds 60s linear infinite;
+      opacity: 0.8;
+    }
+
+    .cloud1 { width: 150px; height: 80px; top: 20%; left: -200px; }
+    .cloud2 { width: 200px; height: 100px; top: 40%; left: -250px; animation-delay: 15s; }
+
+    @keyframes moveClouds {
+      0% { left: -250px; }
+      100% { left: 110%; }
+    }
+
+    .sun, .moon {
+      position: absolute;
+      top: 10%;
+      left: 80%;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      z-index: -1;
+    }
+
+    .sun {
+      background: radial-gradient(circle, #fff700, #ffaa00);
+      box-shadow: 0 0 60px #ffd700;
+    }
+
+    .moon {
+      background: radial-gradient(circle at 30% 30%, #fff, #ccc);
+      box-shadow: 0 0 40px #aaa;
+    }
+
+    .night {
+      background: linear-gradient(to top, #001d3d, #003566);
+      color: white;
+    }
+      </style>
+</head>
+<body>
+  <div class="sky">
+    <div class="sun" id="sun"></div>
+    <div class="moon" id="moon" style="display:none;"></div>
+    <div class="cloud cloud1"></div>
+    <div class="cloud cloud2"></div>
+  </div>
+
+  <div class="container">
+    <h1>🌤️ Animated Weather App</h1>
+    <input type="text" id="cityInput" placeholder="Enter city name" />
+    <button onclick="getWeather()">Get Weather</button>
+    <div class="weather-info" id="weatherInfo"></div>
+  </div>
+
+  <script>
+    async function getWeather() {
+      const city = document.getElementById('cityInput').value;
+      const apiKey = '1d70aaf7853b4d978fa155702252306';
+      const url = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${city}`;
+
+      try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error("City not found");
+        const data = await response.json();
+
+        const tempC = data.current.temp_c;
+        const condition = data.current.condition.text;
+        const isDay = data.current.is_day === 1;
+
+        // Update UI
+        document.getElementById('weatherInfo').innerHTML =
+          `<strong>${data.location.name}</strong><br>
+          🌡️ Temperature: ${tempC}°C<br>
+          ☁️ Condition: ${condition}<br>
+          ${isDay ? '☀️ Daytime' : '🌙 Nighttime'}`;
+
+        // Theme based on day/night
+        const body = document.body;
+        const sun = document.getElementById('sun');
+        const moon = document.getElementById('moon');
+
+        if (isDay) {
+          body.classList.remove('night');
+          sun.style.display = 'block';
+          moon.style.display = 'none';
+        } else {
+          body.classList.add('night');
+          sun.style.display = 'none';
+          moon.style.display = 'block';
+        }
+      } catch (error) {
+        document.getElementById('weatherInfo').innerHTML = "❌ Error: " + error.message;
+      }
+    }
+  </script>
+</body>
+</html>
