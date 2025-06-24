@@ -9,7 +9,7 @@ async function getWeather() {
     return;
   }
 
-  const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&appid=${apiKey}&units=metric`;
+  const url = `http://api.weatherapi.com/v1/current.json?key=a8a8d6a4039b48dda98122953252406&q=London&aqi=yes`;
 
   try {
     const res = await fetch(url);
