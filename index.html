@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Weather App</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            color: #fff;
+            min-height: 100vh;
+            transition: background 0.5s ease;
+        }
+        
+        .container {
+            padding: 50px 20px;
+        }
+        
+        input, button {
+            padding: 12px 20px;
+            font-size: 16px;
+            margin: 10px;
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        
+        input {
+            width: 250px;
+            background: rgba(255,255,255,0.9);
+            color: #333;
+        }
+        
+        input:focus {
+            outline: none;
+            background: white;
+        }
+        
+        button {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        
+        #weatherResult {
+            margin-top: 30px;
+            font-size: 18px;
+        }
+        
+        .weather-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px auto;
+            max-width: 400px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .weather-icon {
+            font-size: 64px;
+            margin: 10px 0;
+        }
+        
+        .temperature {
+            font-size: 48px;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+        
+        .description {
+            font-size: 24px;
+            text-transform: capitalize;
+            margin: 10px 0;
+        }
+        
+        .details {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .detail-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 15px;
+            border-radius: 10px;
+            margin: 5px;
+            flex: 1;
+            min-width: 120px;
+        }
+        
+        .error {
+            color: #ff6b6b;
+            background: rgba(255, 107, 107, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px auto;
+            max-width: 400px;
+            border: 1px solid rgba(255, 107, 107, 0.3);
+        }
+        
+        .loading {
+            color: #fff;
+            font-size: 18px;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+        
+        /* Day & Night backgrounds */
+        .day {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+        }
+        
+        .night {
+            background: linear-gradient(135deg, #2d3436, #636e72);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌤️ Weather App</h1>
+        <input type="text" id="cityInput" placeholder="Enter city name (e.g., London, New York)" />
+        <button onclick="getWeather()">Get Weather</button>
+        <div id="weatherResult"></div>
+    </div>
+
+    <script>
+        // Using OpenWeatherMap API (free tier, better CORS support)
+        const apiKey = '5cf4279fcad69b8e9d9bacbac8b50083'; // You'll need to get your own API key from openweathermap.org
+        
+        // Weather icon mapping
+        const weatherIcons = {
+            '01d': '☀️', '01n': '🌙',
+            '02d': '⛅', '02n': '☁️',
+            '03d': '☁️', '03n': '☁️',
+            '04d': '☁️', '04n': '☁️',
+            '09d': '🌧️', '09n': '🌧️',
+            '10d': '🌦️', '10n': '🌧️',
+            '11d': '⛈️', '11n': '⛈️',
+            '13d': '❄️', '13n': '❄️',
+            '50d': '🌫️', '50n': '🌫️'
+        };
+
+        async function getWeather() {
+            const city = document.getElementById('cityInput').value.trim();
+            const resultDiv = document.getElementById('weatherResult');
+            
+            if (!city) {
+                resultDiv.innerHTML = '<div class="error">Please enter a city name.</div>';
+                return;
+            }
+
+            // Show loading message
+            resultDiv.innerHTML = '<div class="loading">🌍 Loading weather data...</div>';
+
+            // For demo purposes, we'll use a mock API response
+            // In production, you would use: 
+            const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&appid=${apiKey}&units=metric`;
+            
+            try {
+                // Simulate API call with demo data
+                await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate loading
+                
+                // Mock data for demonstration
+                const mockData = {
+                    name: city.charAt(0).toUpperCase() + city.slice(1),
+                    sys: { country: 'Demo' },
+                    main: { 
+                        temp: Math.floor(Math.random() * 30) + 10,
+                        feels_like: Math.floor(Math.random() * 30) + 10,
+                        humidity: Math.floor(Math.random() * 100),
+                        pressure: Math.floor(Math.random() * 100) + 1000
+                    },
+                    weather: [{
+                        main: 'Clear',
+                        description: 'clear sky',
+                        icon: '01d'
+                    }],
+                    wind: { speed: Math.floor(Math.random() * 20) + 1 },
+                    dt: Math.floor(Date.now() / 1000)
+                };
+
+                displayWeather(mockData);
+                
+                // // Show instructions for real API
+                // setTimeout(() => {
+                //     resultDiv.innerHTML += `
+                //         <div style="margin-top: 20px; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 10px; font-size: 14px;">
+                //             <strong>📝 To use real weather data:</strong><br>
+                //             1. Get a free API key from <a href="https://openweathermap.org/api" target="_blank" style="color: #74b9ff;">OpenWeatherMap</a><br>
+                //             2. Replace 'demo_key' with your actual API key<br>
+                //             3. Uncomment the real API URL in the code
+                //         </div>
+                //     `;
+                // }, 2000);
+
+            } catch (error) {
+                console.error('Error:', error);
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <strong>Unable to fetch weather data</strong><br>
+                        This demo shows sample data. For real weather:<br>
+                        • Get an API key from OpenWeatherMap<br>
+                        • Replace the demo code with real API calls
+                    </div>
+                `;
+            }
+        }
+
+        function displayWeather(data) {
+            const resultDiv = document.getElementById('weatherResult');
+            
+            const locationName = data.name;
+            const country = data.sys.country;
+            const temp = Math.round(data.main.temp);
+            const description = data.weather[0].description;
+            const humidity = data.main.humidity;
+            const windSpeed = data.wind.speed;
+            const pressure = data.main.pressure;
+            const feelsLike = Math.round(data.main.feels_like);
+            const iconCode = data.weather[0].icon;
+            const weatherIcon = weatherIcons[iconCode] || '🌤️';
+
+            resultDiv.innerHTML = `
+                <div class="weather-card">
+                    <h2>${locationName}, ${country}</h2>
+                    <div class="weather-icon">${weatherIcon}</div>
+                    <div class="temperature">${temp}°C</div>
+                    <div class="description">${description}</div>
+                    <p style="margin: 10px 0; opacity: 0.8;">Feels like ${feelsLike}°C</p>
+                    
+                    <div class="details">
+                        <div class="detail-item">
+                            <div>💧 Humidity</div>
+                            <div><strong>${humidity}%</strong></div>
+                        </div>
+                        <div class="detail-item">
+                            <div>💨 Wind</div>
+                            <div><strong>${windSpeed} m/s</strong></div>
+                        </div>
+                        <div class="detail-item">
+                            <div>🌡️ Pressure</div>
+                            <div><strong>${pressure} hPa</strong></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Update background based on time
+            updateBackground();
+        }
+
+        function updateBackground() {
+            const hour = new Date().getHours();
+            const isDay = hour >= 6 && hour < 18;
+            document.body.className = isDay ? 'day' : 'night';
+        }
+
+        // Allow Enter key to trigger search
+        document.getElementById('cityInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                getWeather();
+            }
+        });
+
+        // Initialize background
+        updateBackground();
+    </script>
+</body>
+</html>
