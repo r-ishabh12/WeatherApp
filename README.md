@@ -3,7 +3,7 @@
 A responsive weather app built with HTML, CSS, and JavaScript using the OpenWeatherMap API. Displays real-time weather conditions based on user input.
 
 ## 🔗 Live Demo
-👉 [View it here]([https://r-ishabh12.github.io/WeatherApp/](https://r-ishabh12.github.io/WeatherApp/))
+👉 [View it here](https://r-ishabh12.github.io/WeatherApp/)
 
 ## 📸 Screenshots
 <img src="Screenshot 2025-06-28 021630.png" alt="Weather App Screenshot" width="600"/>
